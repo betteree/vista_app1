@@ -5,7 +5,7 @@ import "package:app_vista/src/bloc/events.dart";
 import "package:app_vista/src/bloc/states.dart";
 import "package:app_vista/src/bloc/socket_bloc.dart";
 import 'package:app_vista/src/ui/style.dart';
-//import 'package:app_vista/src/ui/patient_widget.dart';
+import 'package:app_vista/src/ui/patient_widget.dart';
 import 'package:app_vista/src/ui/login_widget.dart';
 import 'package:app_vista/src/ui/gardian_menu_widget.dart';
 
