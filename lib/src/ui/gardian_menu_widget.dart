@@ -67,7 +67,7 @@ class _GardianMenuPageState extends State<GardianMenuPage> {
                     style: _style.getButtonStyle(),
                     onPressed:(){
                       // 아래 주석을 해제
-                      //BlocProvider.of<SocketBloc>(context).add(RealtimeGPS());
+                      BlocProvider.of<SocketBloc>(context).add(RealtimeGPS());
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => RealtimeGPSPage()),
@@ -89,7 +89,7 @@ class _GardianMenuPageState extends State<GardianMenuPage> {
                     style: _style.getButtonStyle(),
                     onPressed:(){
                       // 아래 주석을 해제
-                      //BlocProvider.of<SocketBloc>(context).add(PredictLocation());
+                      BlocProvider.of<SocketBloc>(context).add(PredictLocation());
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => PredictLocationPage()),

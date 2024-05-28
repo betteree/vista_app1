@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  final String IP = "127.0.0.1";
+  final String IP = "165.229.229.127";
   final int PORT = 9999;
   final RealtimeServiceProtocol rsp = RealtimeServiceProtocol();
   Socket? clientSocket;

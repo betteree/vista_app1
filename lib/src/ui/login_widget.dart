@@ -142,14 +142,14 @@ class _LoginPageState extends State<LoginPage> {
                             if (idCon.text.length > 0 && pwCon.text.length > 0){
                               if(clientType == "gardian"){
                                 // 아래 주석을 해제
-                                //BlocProvider.of<SocketBloc>(context).add(TryLogin(idCon.text, pwCon.text));
+                                BlocProvider.of<SocketBloc>(context).add(TryLogin(idCon.text, pwCon.text));
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => GardianMenuPage())
                                 );
                               } else{
                                 // 아래 주석을 해제
-                                //BlocProvider.of<SocketBloc>(context).add(SendGPS(idCon.text, pwCon.text));
+                                BlocProvider.of<SocketBloc>(context).add(SendGPS(idCon.text, pwCon.text));
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => PatientPage())
