@@ -6,7 +6,7 @@ import "package:app_vista/src/bloc/events.dart";
 import "package:app_vista/src/bloc/states.dart";
 import "package:app_vista/src/bloc/socket_bloc.dart";
 import 'package:app_vista/src/ui/style.dart';
-//import 'package:app_vista/src/ui/patient_widget.dart';
+import 'package:app_vista/src/ui/patient_widget.dart';
 import 'package:app_vista/src/ui/login_widget.dart';
 import 'package:app_vista/src/ui/gardian_menu_widget.dart';
 
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                 BlocProvider.of<SocketBloc>(context).add(SetClientType("patient"));
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PatientPage()),
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
               child: Text("환자", style: _style.getButtonTextStyle(),)
