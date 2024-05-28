@@ -26,10 +26,10 @@ class RealtimeServiceProtocol {
     return gpsData;
   }
 
-  Map<String, String> getPredictData(String stringData){
-    Map<String, String> predictData = {
+  Map<String, dynamic> getPredictData(String stringData){
+    Map<String, dynamic> predictData = {
       "method" : "",
-      "body" : "",
+      "body" : [],
     };
 
     try{
@@ -37,7 +37,7 @@ class RealtimeServiceProtocol {
       String method = dataList[0];
       String body = dataList.sublist(1).join(' ');
       predictData['method'] = method;
-      predictData['body'] = body;
+      predictData['body'] = body.split(',');
     } catch (e){
       Map<String, String> predictData = {
         "method" : "Error",

@@ -52,11 +52,13 @@ class RealtimeGPSState extends SocketState{
 }
 
 class TryPredictState extends SocketState{
-  final String place;
+  final List<String> place;
 
   TryPredictState(this.place);
   @override
   List<Object> get props => [place];
+
+
 }
 
 class SendGPSState extends SocketState{}

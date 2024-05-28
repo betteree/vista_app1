@@ -44,7 +44,9 @@ class _PredictLocationPageState extends State<PredictLocationPage> {
             return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  detailBox(width, height* 0.1, state.place),
+                  detailBox(width, height* 0.1, state.place[0], 1),
+                  detailBox(width, height* 0.1, state.place[1], 2),
+                  detailBox(width, height* 0.1, state.place[2], 3),
                   Container(
                       width: width* 0.6,
                       height: height* 0.10,
@@ -74,13 +76,13 @@ class _PredictLocationPageState extends State<PredictLocationPage> {
     );
   }
 
-  Widget detailBox(width, height, String value){
+  Widget detailBox(width, height, String value, index){
     return Container(
       width: width,
       height: height,
       child: Row(
         children: [
-          Text("1순위", style: _style.getTitleTextStyle()),
+          Text("${index.toString()}순위", style: _style.getTitleTextStyle()),
           Text(value, style: _style.getTitleBlackTextStyle()),
         ],
       )

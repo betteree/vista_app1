@@ -33,14 +33,25 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
 
     return BlocBuilder<SocketBloc, SocketState>(
         builder: (context, state){
-          return Scaffold(
-            body : kakaoMapWidget(queryWidth, queryHeight)
-          );
+          if(state is RealtimeGPSState){
+            state.x;
+            state.y;
+            return Scaffold(
+                body : kakaoMapWidget(queryWidth, queryHeight, state)
+            );
+          }else{
+            return Container(
+                width: queryWidth,
+                height: queryHeight,
+                alignment: Alignment.center,
+                child: Text("로딩 중...")
+            );
+          }
         }
     );
   }
 
-  Widget kakaoMapWidget(width, height){
+  Widget kakaoMapWidget(width, height, state){
     return Container();
   }
 }

@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  final String IP = "165.229.229.127";
+  final String IP = "172.20.10.3";
   final int PORT = 9999;
   final RealtimeServiceProtocol rsp = RealtimeServiceProtocol();
   Socket? clientSocket;
@@ -103,22 +103,28 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     }
   }
 
-  void _onPredictLocation(PredictLocation event, Emitter<SocketState> emit){
-    Map<String, String> predictData;
-
-    try{
-      if (clientSocket != null){
+  Future<void> _onPredictLocation(PredictLocation event, Emitter<SocketState> emit) async {
+    try {
+      if (clientSocket != null) {
         clientSocket!.write("predict");
-        clientSocket!.listen( (onData) {
-          predictData = rsp.getPredictData(utf8.decode(onData).trim());
-          if (predictData['method'] == 'predict')
-            emit(TryPredictState(predictData['body']!));
-        });
+
+        await for (var onData in clientSocket!) {
+          Map<String, dynamic> predictData = rsp.getPredictData(utf8.decode(onData).trim());
+          print(predictData);
+          if (predictData['method'] == 'predict') {
+            if (!emit.isDone) {
+              emit(TryPredictState(predictData['body']!));
+            }
+          }
+        }
       }
-    } catch (e){
-      emit(SocketError(e.toString()));
+    } catch (e) {
+      if (!emit.isDone) {
+        emit(SocketError(e.toString()));
+      }
     }
   }
+
 
   void _onDefaultEvent(GoDefaultEvent event, Emitter<SocketState> emit){
     emit(LoginState(id));
