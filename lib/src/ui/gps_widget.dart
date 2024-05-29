@@ -49,25 +49,24 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
         }
     );
   }
-
   Widget GoogleMapWidget(width, height, state) {
     LatLng initialLocation = LatLng(state.x, state.y);
 
-    // GoogleMap 위젯을 반환합니다.
     return Container(
       width: width,
       height: height,
       child: GoogleMap(
-        // GoogleMap의 옵션을 설정합니다.
-        mapType: MapType.normal, // 지도 유형을 선택합니다.
+        mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
-          target: initialLocation, // 초기 위치를 state에서 받은 좌표로 설정합니다.
-          zoom: 14.0, // 초기 줌 레벨을 설정합니다.
+          target: initialLocation,
+          zoom: 14.0,
         ),
         onMapCreated: (GoogleMapController controller) {
-
+          // 이곳에 GoogleMapController를 받아오는 코드가 들어갑니다.
+          // 이 함수에서는 받아온 controller를 사용하여 지도를 제어할 수 있습니다.
         },
       ),
     );
   }
+
   }
