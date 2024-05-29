@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "package:app_vista/src/bloc/events.dart";
 import "package:app_vista/src/bloc/states.dart";
 import "package:app_vista/src/bloc/socket_bloc.dart";
@@ -34,10 +34,9 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
     return BlocBuilder<SocketBloc, SocketState>(
         builder: (context, state){
           if(state is RealtimeGPSState){
-            state.x;
-            state.y;
+            print("들어왔어");
             return Scaffold(
-                body : kakaoMapWidget(queryWidth, queryHeight, state)
+                body : GoogleMapWidget(queryWidth, queryHeight, state)
             );
           }else{
             return Container(
@@ -51,8 +50,24 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
     );
   }
 
-  Widget kakaoMapWidget(width, height, state){
-    return Container();
-  }
-}
+  Widget GoogleMapWidget(width, height, state) {
+    LatLng initialLocation = LatLng(state.x, state.y);
 
+    // GoogleMap 위젯을 반환합니다.
+    return Container(
+      width: width,
+      height: height,
+      child: GoogleMap(
+        // GoogleMap의 옵션을 설정합니다.
+        mapType: MapType.normal, // 지도 유형을 선택합니다.
+        initialCameraPosition: CameraPosition(
+          target: initialLocation, // 초기 위치를 state에서 받은 좌표로 설정합니다.
+          zoom: 14.0, // 초기 줌 레벨을 설정합니다.
+        ),
+        onMapCreated: (GoogleMapController controller) {
+
+        },
+      ),
+    );
+  }
+  }

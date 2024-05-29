@@ -7,6 +7,7 @@ import "package:app_vista/src/bloc/socket_bloc.dart";
 import 'package:app_vista/src/ui/style.dart';
 import 'package:app_vista/src/ui/patient_widget.dart';
 import "package:app_vista/src/ui/gps_widget.dart";
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PredictLocationPage extends StatefulWidget {
   const PredictLocationPage({super.key});

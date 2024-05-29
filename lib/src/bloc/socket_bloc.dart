@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  final String IP = "172.20.10.3";
+  final String IP = "165.229.125.234";
   final int PORT = 9999;
   final RealtimeServiceProtocol rsp = RealtimeServiceProtocol();
   Socket? clientSocket;
@@ -29,40 +29,51 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     on<SendGPS>(_onSendGPS);
   }
 
-  Future<void> _onSendGPS(SendGPS event, Emitter<SocketState> emit) async{
+  Future<void> _onSendGPS(SendGPS event, Emitter<SocketState> emit) async {
     this.id = event.id;
     this.password = event.password;
 
     var request = "Login ${id} ${password} ${clientType}";
-    Future<List<double>> positionList;
     String result = "";
+
     try {
       clientSocket = await Socket.connect(this.IP, this.PORT, timeout: Duration(seconds: 5));
       if (clientSocket != null) {
         clientSocket!.write(request);
       }
       emit(SendGPSState());
-      sleep(Duration(seconds: 2));
-      while (true){
-        positionList = getLocation();
+      // 반복적으로 위치를 가져와서 서버에 전송
+      while (true) {
+        // 위치를 가져옴
+        List<double> positionList = await getLocation();
+        // GPS 데이터 생성
         result = rsp.makeGPSSendData(positionList);
+        // 서버에 전송
         if (clientSocket != null) {
           clientSocket!.write(result);
         }
+        await Future.delayed(Duration(seconds: 2));
       }
     } catch(e) {
       emit(SocketError(e.toString()));
     }
   }
 
-  Future<List<double>> getLocation() async{
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    List<double> positionList = [
-      position.longitude,
-      position.latitude
-    ];
-    return positionList;
+  Future<List<double>> getLocation() async {
+    try {
+      // 위치 정보 가져오기
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      List<double> positionList = [
+        position.longitude,
+        position.latitude
+      ];
+      return positionList;
+    } catch (e) {
+      // 위치 정보를 가져오는 데 실패하면 에러를 처리
+      throw Exception("Failed to get location: $e");
+    }
   }
+
 
 
   Future<void> _onLoginToServer(TryLogin event, Emitter<SocketState> emit) async{
