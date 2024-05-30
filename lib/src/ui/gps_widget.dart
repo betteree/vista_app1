@@ -33,8 +33,9 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
 
     return BlocBuilder<SocketBloc, SocketState>(
         builder: (context, state){
+          print("하이");
           if(state is RealtimeGPSState){
-            print("들어왔어");
+            print("x값 ${state.x}");
             return Scaffold(
                 body : GoogleMapWidget(queryWidth, queryHeight, state)
             );
@@ -50,7 +51,7 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
     );
   }
   Widget GoogleMapWidget(width, height, state) {
-    LatLng initialLocation = LatLng(state.x, state.y);
+    LatLng initialLocation = LatLng(state.y, state.x);
 
     return Container(
       width: width,
@@ -59,7 +60,7 @@ class _RealtimeGPSPageState extends State<RealtimeGPSPage> {
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
           target: initialLocation,
-          zoom: 14.0,
+          zoom: 17.0,
         ),
         onMapCreated: (GoogleMapController controller) {
           // 이곳에 GoogleMapController를 받아오는 코드가 들어갑니다.

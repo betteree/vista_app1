@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  final String IP = "165.229.125.123";
+  final String IP = "192.168.0.3";
   final int PORT = 9999;
   final RealtimeServiceProtocol rsp = RealtimeServiceProtocol();
   Socket? clientSocket;
@@ -44,16 +44,14 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
       emit(SendGPSState());
 
       // 일정 시간마다 위치 정보를 가져오도록 스케줄링
-      Timer.periodic(Duration(seconds: 2), (timer) async {
+      Timer.periodic(Duration(milliseconds: 300), (timer) async {
         try {
           // 위치 정보 가져오기
-          List<double> positionList = await getLocation();
+          List<double> positionList = await getLocation(); // getLocation()를 비동기 호출
 
-          // 위치 정보를 이용하여 작업 수행
           result = rsp.makeGPSSendData(positionList);
 
-          // 결과를 서버로 전송
-          if (clientSocket != null) {
+          if (clientSocket != null && !result.endsWith('gps') ) {
             clientSocket!.write(result);
           }
         } catch (e) {
@@ -75,12 +73,17 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
       );
 
       // 경도와 위도를 포함한 리스트 반환
-      return [position.longitude, position.latitude];
+      List<double> positionList = [
+        position.longitude,
+        position.latitude
+      ];
+      return positionList;
     } catch (e) {
       // 오류 발생 시 처리
       throw Exception('위치 정보를 가져오는 데 실패했습니다: $e');
     }
   }
+
 
 
 
@@ -113,8 +116,19 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     try{
       if (clientSocket != null){
         clientSocket!.listen( (onData) {
-          gpsData = rsp.getGPSData(utf8.decode(onData).trim());
-          emit(RealtimeGPSState(gpsData['x']!, gpsData['y']!));
+
+          String dataString = utf8.decode(onData).trim();
+          print("수신된 원본 데이터: $dataString");  // 원본 데이터 출력
+          if (dataString.endsWith('GPS')) {
+            // 'GPS'를 잘라내기
+            dataString = dataString.substring(0, dataString.length - 3).trim();
+          }
+
+          gpsData = rsp.getGPSData(dataString);
+          print("GPS값: ${gpsData}");
+          if (!emit.isDone) {
+            emit(RealtimeGPSState(gpsData['x']!, gpsData['y']!));
+          }
         });
       }
     } catch (e){

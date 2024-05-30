@@ -48,7 +48,10 @@ class RealtimeGPSState extends SocketState{
   RealtimeGPSState(this.x, this.y);
 
   @override
-  List<Object> get props => [x, y];
+  List<Object> get props => [x, y]; // Null safety를 위해 List<Object?>로 수정
+
+  @override
+  String toString() => 'RealtimeGPSState(x: $x, y: $y)';
 }
 
 class TryPredictState extends SocketState{
