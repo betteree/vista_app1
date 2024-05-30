@@ -83,8 +83,8 @@ class _PredictLocationPageState extends State<PredictLocationPage> {
       height: height,
       child: Row(
         children: [
-          Text("${index.toString()}순위", style: _style.getTitleTextStyle()),
-          Text(value, style: _style.getTitleBlackTextStyle()),
+          Text("${index.toString()}순위", style: _style.getPredictTextStyle()),
+          Text(value, style: _style.getPrelocationTextStyle()),
         ],
       )
     );

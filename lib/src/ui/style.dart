@@ -1,4 +1,9 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 
 
 class DefaultTheme{
@@ -31,9 +36,18 @@ class HomeWidgetTheme extends DefaultTheme {
   TextStyle _infoTextStyle = TextStyle();
   TextStyle _buttonTextStyle = TextStyle();
   ButtonStyle _buttonStyle = ButtonStyle();
+  TextStyle _predictTextStyle = TextStyle();
+  TextStyle _locationPreTextStyle =TextStyle();
   Widget _title = Container();
 
   HomeWidgetTheme(){
+    _predictTextStyle = TextStyle( fontSize: 20, color: getRealGreen(),
+      fontWeight: FontWeight.w900,
+      shadows: [Shadow(offset: Offset(1.0, 1.0), blurRadius: 4.0,
+        color: Colors.grey)]);
+    _locationPreTextStyle = TextStyle( fontSize: 20, color: getRealBlack(),
+      fontWeight: FontWeight.w900,
+    );
     _titleTextStyle = TextStyle(fontSize: 50, color: getRealGreen(),
         fontWeight: FontWeight.w900,
         shadows: [Shadow(offset: Offset(1.0, 1.0), blurRadius: 4.0,
@@ -65,6 +79,8 @@ class HomeWidgetTheme extends DefaultTheme {
   TextStyle getTitleBlackTextStyle() => _titleBlackTextStyle;
   TextStyle getInfoTextStyle() => _infoTextStyle;
   TextStyle getButtonTextStyle() => _buttonTextStyle;
+  TextStyle getPredictTextStyle() =>_predictTextStyle;
+  TextStyle getPrelocationTextStyle() => _locationPreTextStyle;
   ButtonStyle getButtonStyle() => _buttonStyle;
 
   Widget getTitleWidget(width, height){

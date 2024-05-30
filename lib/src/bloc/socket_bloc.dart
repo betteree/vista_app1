@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  final String IP = "165.229.125.234";
+  final String IP = "165.229.125.123";
   final int PORT = 9999;
   final RealtimeServiceProtocol rsp = RealtimeServiceProtocol();
   Socket? clientSocket;
@@ -42,19 +42,27 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
         clientSocket!.write(request);
       }
       emit(SendGPSState());
-      // 반복적으로 위치를 가져와서 서버에 전송
-      while (true) {
-        // 위치를 가져옴
-        List<double> positionList = await getLocation();
-        // GPS 데이터 생성
-        result = rsp.makeGPSSendData(positionList);
-        // 서버에 전송
-        if (clientSocket != null) {
-          clientSocket!.write(result);
+
+      // 일정 시간마다 위치 정보를 가져오도록 스케줄링
+      Timer.periodic(Duration(seconds: 2), (timer) async {
+        try {
+          // 위치 정보 가져오기
+          List<double> positionList = await getLocation();
+
+          // 위치 정보를 이용하여 작업 수행
+          result = rsp.makeGPSSendData(positionList);
+
+          // 결과를 서버로 전송
+          if (clientSocket != null) {
+            clientSocket!.write(result);
+          }
+        } catch (e) {
+          // 오류 처리
+          emit(SocketError(e.toString()));
         }
-        await Future.delayed(Duration(seconds: 2));
-      }
-    } catch(e) {
+      });
+    } catch (e) {
+      // 오류 처리
       emit(SocketError(e.toString()));
     }
   }
@@ -62,15 +70,15 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
   Future<List<double>> getLocation() async {
     try {
       // 위치 정보 가져오기
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      List<double> positionList = [
-        position.longitude,
-        position.latitude
-      ];
-      return positionList;
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // 경도와 위도를 포함한 리스트 반환
+      return [position.longitude, position.latitude];
     } catch (e) {
-      // 위치 정보를 가져오는 데 실패하면 에러를 처리
-      throw Exception("Failed to get location: $e");
+      // 오류 발생 시 처리
+      throw Exception('위치 정보를 가져오는 데 실패했습니다: $e');
     }
   }
 
