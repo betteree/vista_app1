@@ -76,6 +76,17 @@ class SendGPS extends SocketEvent{
   List<Object> get props => [id, password];
 }
 
+class ReciveGPS extends SocketEvent{
+  final double x;
+  final double y;
+
+  ReciveGPS(this.x, this.y);
+
+  @override
+  List<Object> get props => [x, y];
+}
+
+
 
 class PredictLocation extends SocketEvent {
   @override

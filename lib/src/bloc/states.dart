@@ -87,3 +87,14 @@ class MessageItem extends Equatable {
   @override
   List<Object?> get props => [owner, content, method];
 }
+
+
+class ReciveState extends SocketState{
+  final double x;
+  final double y;
+
+  ReciveState(this.x, this.y);
+
+  @override
+  List<Object> get props => [x, y];
+}

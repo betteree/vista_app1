@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 
 class SocketBloc extends Bloc<SocketEvent, SocketState> {
-  final String IP = "192.168.0.3";
+  final String IP = "172.20.47.117";
   final int PORT = 9999;
   final RealtimeServiceProtocol rsp = RealtimeServiceProtocol();
   Socket? clientSocket;
@@ -21,6 +21,7 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
   String clientType = "";
 
   SocketBloc() : super(SocketInitial()){
+    on<ReciveGPS>(_onReciveGPS);
     on<TryLogin>(_onLoginToServer);
     on<SetClientType>(_onSetClientType);
     on<RealtimeGPS>(_onRealtimeGPS);
@@ -44,13 +45,13 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
       emit(SendGPSState());
 
       // 일정 시간마다 위치 정보를 가져오도록 스케줄링
-      Timer.periodic(Duration(milliseconds: 300), (timer) async {
+      Timer.periodic(Duration(seconds: 1), (timer) async {
         try {
           // 위치 정보 가져오기
           List<double> positionList = await getLocation(); // getLocation()를 비동기 호출
-
           result = rsp.makeGPSSendData(positionList);
 
+          print(result);
           if (clientSocket != null && !result.endsWith('gps') ) {
             clientSocket!.write(result);
           }
@@ -126,14 +127,19 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
 
           gpsData = rsp.getGPSData(dataString);
           print("GPS값: ${gpsData}");
-          if (!emit.isDone) {
-            emit(RealtimeGPSState(gpsData['x']!, gpsData['y']!));
-          }
+          //if (!emit.isDone) {
+          add(ReciveGPS(gpsData['x']!, gpsData['y']!));
+          //}
         });
       }
     } catch (e){
       emit(SocketError(e.toString()));
     }
+  }
+
+  void _onReciveGPS(ReciveGPS event, Emitter<SocketState> emit){
+    print("hello....");
+    emit(RealtimeGPSState(event.x, event.y));
   }
 
   Future<void> _onPredictLocation(PredictLocation event, Emitter<SocketState> emit) async {

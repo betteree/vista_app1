@@ -55,9 +55,9 @@ class RealtimeServiceProtocol {
   String makeGPSSendData(listData){
     String result;
     try{
-      result = "GPS ${listData[0]} ${listData[1]}";
+      result = "GPS ${listData[0]} ${listData[1]} ";
     } catch (e){
-      result = "GPS 0 0";
+      result = "GPS 0 0 " ;
     }
     return result;
   }
